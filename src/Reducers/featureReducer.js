@@ -21,12 +21,16 @@ const initialState = {
 const featureReducer = (state = initialState, action) => {
     switch (action.type) {
         case ADD_FEATURE:
+            const featuresAdded = state.additionalFeatures.filter((feature) => feature.id === action.payload)
+            console.log(state);
+            console.log(featuresAdded);
             return {
                 ...state,
                 car: {
                     ...state.car,
-                    features: [...state.car.features, ...state.additionalFeatures.filter((feature) => feature.id === action.payload)]
-                }
+                    features: [...state.car.features, ...featuresAdded],
+                },
+                additionalFeatures: [...state.additionalFeatures.filter((feature) => feature.id !== action.payload)]
             }
         case REMOVE_FEATURE:
             return {
@@ -34,7 +38,8 @@ const featureReducer = (state = initialState, action) => {
                 car: {
                     ...state.car,
                     features: state.car.features.filter((feature) => feature.id !== action.payload),
-                }
+                },
+                additionalFeatures: [...state.additionalFeatures, ...state.car.features.filter((feature) => feature.id === action.payload)]
             }
         default:
             return state;
